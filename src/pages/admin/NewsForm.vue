@@ -1,12 +1,19 @@
 <template>
   <div class="pa-2">
-    <div class="mb-2">{{ header }}</div>
+    <h3 class="mb-2">{{ header }}</h3>
     <div>
-      <div class="mb-2">
-        <v-text-field label="Заголовок" v-model="title"></v-text-field>
-      </div>
-      <ckeditor :editor="editor" v-model="content" :config="editorConfig"></ckeditor>
-      <v-btn color="success" class="mt-2" @click="save()">Сохранить</v-btn>
+      <v-form ref="form">
+        <div class="mb-2">
+          <v-text-field label="Заголовок" v-model="title" :rules="titleRules" required></v-text-field>
+        </div>
+        <div id="content" :class="{'has-error':contentHasError}">
+          <div class="text-body-1 mb-2">Текст новости</div>
+          <ckeditor :editor="editor" v-model="content" :config="editorConfig" @ready="readyEditor" @input="checkContent"
+                    @focus="checkContent" @blur="checkContent"></ckeditor>
+          <span v-if="contentHasError" class="message-error text-caption">Поле не может быть пустым</span>
+        </div>
+        <v-btn color="success" class="mt-2" @click="save()">Сохранить</v-btn>
+      </v-form>
     </div>
   </div>
 </template>
@@ -18,10 +25,16 @@ export default {
   name: "NewsForm",
   data() {
     return {
+      titleRules: [
+        v => !!v || 'Заголовок не может быть пустым',
+      ],
       editor: ClassicEditor,
       title: null,
       content: '',
-      editorConfig: {}
+      contentHasError: false,
+      editorConfig: {
+        language: 'ru'
+      }
     }
   },
   computed: {
@@ -30,15 +43,30 @@ export default {
     }
   },
   methods: {
+    checkContent() {
+      this.contentHasError = !this.content;
+    },
+    readyEditor() {
+      this.contentHasError = false
+    },
     async save() {
-      if (this.title && this.content) {
-        await this.$axios.post('/admin/news/save', {
-          title: this.title,
-          content: this.content,
-          id: this.$route.params.id ? this.$route.params.id : null
-        })
-        this.$router.push({name: 'News'})
+      const {valid} = await this.$refs.form.validate()
+
+      if (!this.content) {
+        this.contentHasError = true
       }
+
+      if (valid && !this.contentHasError) {
+        if (this.title && this.content) {
+          await this.$axios.post('/admin/news/save', {
+            title: this.title,
+            content: this.content,
+            id: this.$route.params.id ? this.$route.params.id : null
+          })
+          this.$router.push({name: 'News'})
+        }
+      }
+
     }
   },
   async mounted() {
@@ -54,12 +82,9 @@ export default {
 </script>
 
 <style scoped>
-.ck-editor__editable_inline {
-  min-height: 400px;
-}
-
-.ck-editor__editable_inline:not(.ck-comment__input *) {
-  height: 300px;
-  overflow-y: auto;
+.message-error {
+  /*font-size: 12px;*/
+  color: rgb(176, 0, 32);
+  padding-inline: 16px;
 }
 </style>

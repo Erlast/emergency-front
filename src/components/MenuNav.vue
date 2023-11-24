@@ -1,11 +1,6 @@
-<script setup>
-import img from '../assets/images/avatar-svgrepo-com.svg'
-</script>
 <template>
   <v-list nav>
-  <v-list-item
-      :prepend-avatar="img"
-      title="admin"></v-list-item>
+    <v-list-item-title class="d-flex justify-center mb-3"><h1>ГКБ №34</h1></v-list-item-title>
   <v-divider></v-divider>
   <v-list-item prepend-icon="mdi-home" to="/" exact title="Главная"></v-list-item>
   <v-list-item prepend-icon="mdi-folder" to="/mis-nso" exact title="МИС НСО"></v-list-item>

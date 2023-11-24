@@ -5,3 +5,7 @@
     height: 300px;
     overflow-y: auto;
 }
+
+#content.has-error .ck-content {
+    border-color: rgb(176, 0, 32);
+}

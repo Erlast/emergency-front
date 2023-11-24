@@ -1,22 +1,22 @@
 <template>
-  <div>Новости</div>
-  <template v-for="(key,item) in news" :key="key">
+  <div>
+    <h2>Новости</h2>
+  </div>
+  <template v-for="(item,key) in news" :key="key">
     <v-card
-        class="mx-auto"
-        max-width="344"
-        hover
-    >
-      <v-card-item>
-        <v-card-title>
-          {{item.title}}
-        </v-card-title>
-        <v-card-subtitle>
-          {{item.description}}
-        </v-card-subtitle>
-      </v-card-item>
+        class="mx-auto mb-3 news-card"
+        variant="tonal"
+        color="cyan-lighten-1"
+        :title="item.title"
+        :subtitle="$moment(item.created_at).format('DD.MM.YYYY')"
 
+    >
+      <template v-slot:append>
+        <delete-button :id="item.id" @delete="deleteNews"></delete-button>
+      </template>
       <v-card-text>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        <div v-html="item.content"></div>
+
       </v-card-text>
     </v-card>
   </template>
@@ -25,24 +25,36 @@
 
 <script>
 import {ref} from 'vue'
+import DeleteButton from "@/components/DeleteButton";
 
 export default {
   name: "IndexPage",
+  components: {DeleteButton},
   setup() {
     return {
       news: ref([])
     }
 
   },
-  methods: {},
-  async mounted() {
-    const {data} = await this.$axios.get('/news')
+  methods: {
+    async getNews() {
+      const {data} = await this.$axios.get('/news')
 
-    this.news = data.data
+      this.news = data.data
+    },
+    async deleteNews() {
+    //  await this.$axios.delete(`/admin/news/${id}`)
+      await this.getNews()
+    }
+  },
+  async mounted() {
+    await this.getNews()
   }
 }
 </script>
 
-<style scoped>
-
+<style>
+.news-card .v-card-item {
+  align-items: start !important;
+}
 </style>
