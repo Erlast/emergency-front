@@ -1,0 +1,7 @@
+.ck-editor__editable_inline {
+    min-height: 400px;
+}
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 300px;
+    overflow-y: auto;
+}
