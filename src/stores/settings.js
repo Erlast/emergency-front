@@ -3,7 +3,8 @@ import {defineStore} from "pinia";
 export const useSettingsStore = defineStore('settings', {
     state: () => {
         return {
-            draw: true
+            draw: true,
+            stayOnCartridgeForm: false
         }
     },
     persist: true,
@@ -11,6 +12,9 @@ export const useSettingsStore = defineStore('settings', {
     actions: {
         toggleDraw() {
             this.draw = !this.draw
+        },
+        toggleStayOnCartridgeForm() {
+            this.stayOnCartridgeForm = !this.stayOnCartridgeForm
         },
     },
 })

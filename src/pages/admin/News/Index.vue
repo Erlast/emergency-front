@@ -33,19 +33,16 @@
 </template>
 
 <script>
-
 import DeleteButton from "@/components/DeleteButton";
+
 export default {
   name: "NewsIndex",
   components: {DeleteButton},
   setup() {
-
-
   },
   data() {
     return {
       news: [],
-      dialog: false,
       itemsPerPage: 5,
       headers: [
         {
@@ -72,9 +69,6 @@ export default {
       this.loading = false
     },
     async deleteNews() {
-     // console.log(id)
-     // await this.$axios.delete(`/admin/news/${id}`)
-    //  this.dialog = false
       await this.getNews()
     }
   },

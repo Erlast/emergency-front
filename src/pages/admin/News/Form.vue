@@ -4,7 +4,7 @@
     <div>
       <v-form ref="form">
         <div class="mb-2">
-          <v-text-field label="Заголовок" v-model="title" :rules="titleRules" required></v-text-field>
+          <v-text-field label="Заголовок" v-model="title" :rules="titleRules" required  density="compact"></v-text-field>
         </div>
         <div id="content" :class="{'has-error':contentHasError}">
           <div class="text-body-1 mb-2">Текст новости</div>

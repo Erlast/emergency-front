@@ -31,12 +31,22 @@ const router = createRouter({
                 {
                     path: '/news',
                     name: 'News',
-                    component: () => import('../pages/admin/NewsIndex')
+                    component: () => import('../pages/admin/News/Index')
                 },
                 {
                     path: '/news/form/:id?',
                     name: 'NewsForm',
-                    component: () => import('../pages/admin/NewsForm')
+                    component: () => import('../pages/admin/News/Form')
+                },
+                {
+                    path: '/cartridges',
+                    name: 'Cartridges',
+                    component: () => import('../pages/admin/Cartridges/Index')
+                },
+                {
+                    path: '/cartridge/form/:id?',
+                    name: 'CartridgeForm',
+                    component: () => import('../pages/admin/Cartridges/Form')
                 },
             ]
         },

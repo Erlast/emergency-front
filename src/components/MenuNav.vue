@@ -19,6 +19,7 @@
     <v-list-item
         title="Админ меню"></v-list-item>
     <v-list-item prepend-icon="mdi-home" to="/news" exact title="Новости"></v-list-item>
+    <v-list-item prepend-icon="mdi-paper-roll" to="/cartridges" exact title="Картриджи"></v-list-item>
   </v-list>
 
 </template>
