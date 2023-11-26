@@ -80,7 +80,6 @@
       <template v-slot:actions>
         <v-btn
             color="white"
-            variant="text"
             @click="snackbar = false"
         >
           Закрыть
