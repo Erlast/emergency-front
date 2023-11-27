@@ -9,15 +9,10 @@
         Oops. Nothing here...
       </div>
 
-      <q-btn
-        class="q-mt-xl"
-        color="white"
-        text-color="blue"
-        unelevated
+      <v-btn
+        color="primary"
         @click="$router.go(-1)"
-        label="Вернуться"
-        no-caps
-      />
+      >Вернуться</v-btn>
     </div>
   </div>
 </template>

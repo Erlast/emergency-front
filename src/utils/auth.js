@@ -7,8 +7,7 @@ const TokenKey = 'access_token'
 
 const USER_ROLE = 1
 const GUEST_ROLE = 0
-const MODER_ROLE = 2
-const ADMIN_ROLE = 3
+const ADMIN_ROLE = 2
 
 const getToken = () => {
   return getCookie(TokenKey)
@@ -45,7 +44,7 @@ const isGuest = () => {
 }
 
 const user = () => {
-  return getCookie('user') ? JSON.parse(getCookie('user')) : {login: '', role: GUEST_ROLE}
+  return getCookie('user') ? JSON.parse(getCookie('user')) : {name: '', role: GUEST_ROLE}
 }
 
 const jwt = () => {
@@ -61,6 +60,7 @@ const loginWithToken = async (payload, user) => {
 const logout = async () => {
   api.defaults.headers.common['Authorization'] = null
   Cookies.remove('user')
+  Cookies.remove('jwt')
   removeToken()
 }
 
@@ -91,7 +91,6 @@ export {
   GUEST_ROLE,
   USER_ROLE,
   ADMIN_ROLE,
-  MODER_ROLE,
   isAdmin,
   hasRoles,
   jwt

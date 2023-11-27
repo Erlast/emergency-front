@@ -7,16 +7,30 @@
         class="mx-auto mb-3 news-card"
         variant="tonal"
         color="cyan-lighten-1"
-        :title="item.title"
-        :subtitle="$moment(item.created_at).format('DD.MM.YYYY')"
-
     >
-      <template v-slot:append>
-        <delete-button :id="item.id" @delete="deleteNews"></delete-button>
-      </template>
-      <v-card-text>
-        <div v-html="item.content"></div>
+      <v-card-item class="bg-cyan-darken-1">
+        <v-card-title>
+          <span class="text-sm-h6">{{item.title}}</span>
+        </v-card-title>
+        <v-card-subtitle>
+          {{$moment(item.created_at).format('DD.MM.YYYY')}}
+        </v-card-subtitle>
+        <template v-if="!isGuest() && user().role===ADMIN_ROLE" v-slot:append>
+          <v-defaults-provider
+              :defaults="{
+            VBtn: {
+              variant: 'text',
+              density: 'comfortable',
+            }
+          }"
+          >
+            <delete-button :id="item.id" @delete="deleteNews" color-button="pink-darken-3"></delete-button>
+          </v-defaults-provider>
+        </template>
+      </v-card-item>
 
+      <v-card-text class="mt-4">
+        <div v-html="item.content"></div>
       </v-card-text>
     </v-card>
   </template>
@@ -24,6 +38,7 @@
 </template>
 
 <script>
+import {isGuest, user, ADMIN_ROLE} from "@/utils/auth";
 import {ref} from 'vue'
 import DeleteButton from "@/components/DeleteButton";
 
@@ -32,7 +47,10 @@ export default {
   components: {DeleteButton},
   setup() {
     return {
-      news: ref([])
+      news: ref([]),
+      isGuest,
+      user,
+      ADMIN_ROLE
     }
 
   },
@@ -43,7 +61,7 @@ export default {
       this.news = data.data
     },
     async deleteNews() {
-    //  await this.$axios.delete(`/admin/news/${id}`)
+      //  await this.$axios.delete(`/admin/news/${id}`)
       await this.getNews()
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <v-btn variant="text" color="error" icon="mdi-delete">
+  <v-btn variant="text" :color="colorButton" icon="mdi-delete">
     <v-icon icon="mdi-delete"/>
     <v-dialog v-model="dialog" width="500" activator="parent">
 
@@ -25,6 +25,12 @@ export default {
     id: {
       type: Number,
       required: true
+    },
+    colorButton: {
+      type: String,
+      default() {
+        return 'error'
+      }
     }
   },
   data() {

@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import {isBoolean, isEmpty} from "lodash";
 import {SORT_PARAM, FILTER_PARAM} from '/src/utils/params'
-import {loginWithToken, jwt, setToken} from "/src/utils/auth";
+import {loginWithToken, jwt, setToken, isGuest, getToken} from "/src/utils/auth";
 import router from '../router'
 
 // Be careful when using SSR for cross-request state pollution
@@ -66,9 +66,10 @@ api.interceptors.request.use(
 
    // Loading.show()
 
-    // if (!isGuest()) {
-    //   config.headers.Authorization = `Bearer ${getToken()}`
-    // }
+    if (!isGuest()) {
+      config.headers.Authorization = `Bearer ${getToken()}`
+    }
+    //console.log(config.headers)
     return config
   },
   error => {
@@ -136,7 +137,7 @@ api.interceptors.response.use(
       case 401: {
         const {data} = await api.post('/api/auth/refresh', jwt())
         await setToken(data.access_token)
-        const {data: user} = await api.get('/api/client/user')
+        const {data: user} = await api.get('/api/admin/user')
         await loginWithToken(data, user.data)
         return api.request(error.config)
       }
