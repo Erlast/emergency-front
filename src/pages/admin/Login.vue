@@ -6,7 +6,7 @@
         <v-text-field
             v-model="username"
             label="Логин"
-                      :rules="usernameRules"
+            :rules="usernameRules"
         ></v-text-field>
 
         <v-text-field
@@ -41,7 +41,10 @@ export default {
   },
   methods: {
     async login() {
+      const progress = this.$progress.start();
+
       const {valid} = await this.$refs.loginForm.validate()
+
       if (valid) {
         const {data} = await this.$axios.post('/auth/login', {
           login: this.username,
@@ -53,9 +56,16 @@ export default {
         if (data.access_token) {
           await setToken(data.access_token)
 
-          const {data: user1} = await this.$axios.get('/admin/user')
+          const {data: user1} = await this.$axios.get('/user')
 
-          await loginWithToken(data, user1)
+          await loginWithToken(data, user1.data)
+
+          progress.finish()
+
+          this.$notify({
+            title: 'Успешный вход',
+            type: 'success',
+          })
 
           if (user1.role !== ADMIN_ROLE) {
             this.$router.push({path: '/'})
@@ -66,9 +76,10 @@ export default {
         }
 
       } else {
+        progress.finish()
         return false
       }
-
+      progress.finish()
     },
   },
 }

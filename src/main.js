@@ -8,9 +8,12 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import '/src/assets/css/main.css'
+
 import moment from 'moment'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import Notifications from '@kyvg/vue3-notification'
+import {Vue3ProgressPlugin} from '@marcoschulte/vue3-progress';
 
 import CKEditor from "@ckeditor/ckeditor5-vue";
 
@@ -31,6 +34,9 @@ app.use(router)
 app.use(vuetify)
 app.use(CKEditor)
 app.use(pinia)
+app.use(Notifications)
+app.use(Vue3ProgressPlugin)
+//app.use(Treeview);
 
 app.config.globalProperties.$axios = api
 app.config.globalProperties.$moment = moment

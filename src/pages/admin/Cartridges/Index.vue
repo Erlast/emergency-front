@@ -4,15 +4,20 @@
     <v-divider></v-divider>
   </v-row>
   <v-row class="mt-2 px-3">
-    <v-data-table
-        v-model:items-per-page="itemsPerPage"
+    <v-data-table-server
+        v-model:items-per-page="cartridgesStore.itemsPerPage"
+        v-model:sort-by="cartridgesStore.sortBy"
+        v-model:page="cartridgesStore.page"
         :headers="headers"
         :items-length="totalItems"
+        :items="cartridges"
         :loading="loading"
         item-value="id"
+        items-per-page-text="На странице"
+        :page-text="pageText"
         @update:options="getCartridges"
         loading-text="Загрузка... подождите"
-        :items="cartridges">
+    >
       <template #[`item.buttons`]="{ item }">
         <v-btn variant="text" color="success" icon="mdi-pencil"
                :to="{name:'CartridgeForm',params:{id:item.id}}"></v-btn>
@@ -27,34 +32,42 @@
         {{ (item.department) ? item.department.name : '' }}
       </template>
       <template #[`item.status`]="{ item }">
-        <v-chip color="success" variant="flat" v-if="item.status===1">
+        <v-chip color="success" variant="flat" v-if="item.status===1" size="small">
           На складе
         </v-chip>
-        <v-chip color="secondary" variant="flat" v-if="item.status===2">
+        <v-chip color="secondary" variant="flat" v-if="item.status===2" size="small">
           На заправке
         </v-chip>
-        <v-chip color="primary" variant="flat" v-if="item.status===3">
+        <v-chip color="primary" variant="flat" v-if="item.status===3" size="small">
           В отделе
         </v-chip>
-        <v-chip color="red" variant="flat" v-if="item.status===4">
+        <v-chip color="red" variant="flat" v-if="item.status===4" size="small">
           Списан
         </v-chip>
       </template>
       <template v-slot:no-data>
         Нет данных
       </template>
-    </v-data-table>
+    </v-data-table-server>
 
   </v-row>
 </template>
 
 <script>
+import {useCartridgesStore} from '@/stores/cartridges'
+
 export default {
   name: "CartridgeIndex",
+  setup() {
+    const cartridgesStore = useCartridgesStore()
+
+    return {
+      cartridgesStore
+    }
+  },
   data() {
     return {
       cartridges: [],
-      itemsPerPage: 5,
       headers: [
         {
           title: '#',
@@ -75,13 +88,37 @@ export default {
         {title: '', key: 'buttons', align: 'end'},
       ],
       loading: true,
-      totalItems: 0,
+      totalItems: 0
+    }
+  },
+  computed: {
+    pageText() {
+      let lastRecord = this.cartridgesStore.itemsPerPage * this.cartridgesStore.page
+      if (lastRecord > this.totalItems)
+        lastRecord = this.totalItems
+      return ((this.cartridgesStore.page - 1) * this.cartridgesStore.itemsPerPage + 1) + '-' + lastRecord + ' из ' + this.totalItems
     }
   },
   methods: {
-    async getCartridges() {
+    async getCartridges({page, sortBy}) {
       this.loading = true
-      const {data} = await this.$axios.get('/admin/cartridges')
+
+      const params = {
+        page: page,
+        perPage: this.cartridgesStore.itemsPerPage
+      }
+
+      if (sortBy.length) {
+        params.sort = {
+          value: sortBy[0].key,
+          desc: sortBy[0].order === 'desc'
+        }
+      }
+
+      const {data} = await this.$axios.get('/admin/cartridges', {
+        params: params
+      })
+
       this.cartridges = data.data.cartridges
       this.totalItems = data.data.total
       this.loading = false

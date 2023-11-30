@@ -70,22 +70,7 @@
         <v-btn color="success" class="mt-2" @click="save()">Сохранить</v-btn>
       </v-form>
     </div>
-    <v-snackbar
-        v-model="snackbar"
-        :timeout="timeout"
-        color="success"
-    >
-      {{ text }}
 
-      <template v-slot:actions>
-        <v-btn
-            color="white"
-            @click="snackbar = false"
-        >
-          Закрыть
-        </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
@@ -135,9 +120,6 @@ export default {
           name: 'Списан'
         }
       ],
-      snackbar: false,
-      text: 'Сообщение',
-      timeout: 2000,
     }
   },
   computed: {
@@ -163,8 +145,10 @@ export default {
           id: this.$route.params.id ? parseInt(this.$route.params.id) : null
         })
 
-        this.text = 'Информация о картридже сохранена.'
-        this.snackbar = true
+        this.$notify({
+          title: 'Информация о картридже сохранена.',
+          type: 'success',
+        })
 
         if (!this.settingsStore.stayOnCartridgeForm) {
           this.$router.push({name: 'Cartridges'})

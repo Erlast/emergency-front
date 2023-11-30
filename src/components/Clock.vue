@@ -8,7 +8,8 @@ import moment from "moment";
 export default {
   name: "ClockComponent",
   setup() {
-    const getCurrentTime = () => moment().format("HH:mm:ss");
+    moment.locale('ru')
+    const getCurrentTime = () => moment().format("D MMM HH:mm:ss");
     return {
       getCurrentTime
     }

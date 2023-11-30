@@ -2,11 +2,10 @@
   <v-btn variant="text" :color="colorButton" icon="mdi-delete">
     <v-icon icon="mdi-delete"/>
     <v-dialog v-model="dialog" width="500" activator="parent">
-
       <v-card>
         <v-card-title class="text-h5">Удалить новость?</v-card-title>
 
-        <v-card-text>Вы действительно хотите удалить новость?</v-card-text>
+        <v-card-text>{{ message }}</v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -26,10 +25,22 @@ export default {
       type: Number,
       required: true
     },
+    url: {
+      type: String,
+      default() {
+        return '/admin/news/'
+      }
+    },
     colorButton: {
       type: String,
       default() {
         return 'error'
+      }
+    },
+    message: {
+      type: String,
+      default() {
+        return "Вы действительно хотите удалить новость?";
       }
     }
   },
@@ -41,7 +52,7 @@ export default {
   methods: {
     async deleteNews(id) {
 
-      await this.$axios.delete(`/admin/news/${id}`)
+      await this.$axios.delete(`${this.url}${id}`)
       this.dialog = false
       this.$emit('delete')
     }

@@ -1,5 +1,5 @@
 import MainLayout from '../layouts/Main.vue'
-import {ADMIN_ROLE} from "@/utils/auth";
+import {ADMIN_ROLE, USER_ROLE} from "@/utils/auth";
 
 const routes = [
     {
@@ -71,6 +71,42 @@ const routes = [
                 component: () => import('../pages/admin/Cartridges/Form'),
                 meta: {
                     title: 'Картридж управление',
+                    authorize: [ADMIN_ROLE]
+                }
+            },
+            {
+                path: '/admin/users',
+                name: 'Users',
+                component: () => import('../pages/admin/Users/Index'),
+                meta: {
+                    title: 'Пользователи',
+                    authorize: [ADMIN_ROLE]
+                }
+            },
+            {
+                path: '/admin/user/form/:id?',
+                name: 'UserForm',
+                component: () => import('../pages/admin/Users/Form'),
+                meta: {
+                    title: 'Пользователь',
+                    authorize: [ADMIN_ROLE]
+                }
+            },
+            {
+                path: '/admin/work-stations',
+                name: 'WorkStations',
+                component: () => import('../pages/admin/WorkStations/Index'),
+                meta: {
+                    title: 'ПК',
+                    authorize: [ADMIN_ROLE, USER_ROLE]
+                }
+            },
+            {
+                path: '/admin/documents',
+                name: 'Documents',
+                component: () => import('../pages/admin/Documents/Index'),
+                meta: {
+                    title: 'Документы',
                     authorize: [ADMIN_ROLE]
                 }
             },
