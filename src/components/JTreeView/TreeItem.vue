@@ -1,70 +1,85 @@
 <template>
-  <v-list-item v-if="!isFolder" :prepend-icon="(item.isDir)?'mdi-folder':'mdi-file'" :title="item.name"
+  <v-list-item v-if="!isFolder" :prepend-icon="item.is_dir?(item.is_share?'mdi-folder-eye':'mdi-folder'):'mdi-file'"
+               :title="item.name"
                @dblclick="makeFolder">
     <template v-slot:title>
       <div class="d-flex flex-row align-center">
         <span class="mr-2">{{ item.name }}</span>
-        <v-tooltip text="Добавить раздел или документ" location="top">
+        <v-tooltip text="Добавить" location="top">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-plus" density="compact" variant="text" class="mr-1" color="cyan-darken-4"
-                   v-if="item.isDir"/>
+            <tree-add-item :props="props" @addItem="addItem" v-if="item.is_dir && !item.is_share" :item="item"/>
           </template>
         </v-tooltip>
-        <v-btn icon="mdi-pencil" density="compact" variant="text" class="mr-1" color="success"></v-btn>
-        <v-btn icon="mdi-delete" density="compact" variant="text" color="purple-darken-4"></v-btn>
+        <v-tooltip text="Редактировать" location="top">
+          <template v-slot:activator="{ props }">
+            <tree-add-item :props="props" @addItem="addItem" icon="mdi-pencil" color="success" action="edit"
+                           :item="item"/>
+          </template>
+        </v-tooltip>
+
+        <delete-button :title="(item.is_dir)?'Удалить раздел?':'Удалить документ?'"
+                       :url="(item.is_dir)?'/admin/section/':'/admin/document/'"
+                       :id="item.id"
+                       @delete="deleteItem"
+                       color-button="purple-darken-4"
+                       density="compact"
+                       :message="(item.is_dir)?'Вы точно хотите удалить раздел? Все его подразделы и документы будут удалены.':'Вы точно хотите удалить документ?'"></delete-button>
+
       </div>
     </template>
   </v-list-item>
-  <v-list-group :value="item.id" v-if="isFolder" @dblclick="makeFolder">
+  <v-list-group :value="item._id" v-if="isFolder" @dblclick="makeFolder">
     <template v-slot:activator="{ props }">
       <v-list-item
           v-bind="props"
-          :prepend-icon="(item.isDir)?'mdi-folder':'mdi-file'"
+          :prepend-icon="item.is_dir?(item.is_share?'mdi-folder-eye':'mdi-folder'):'mdi-file'"
       >
         <template v-slot:title>
           <div class="d-flex flex-row align-center">
             <span class="mr-2">{{ item.name }}</span>
             <v-tooltip text="Добавить раздел или документ" location="top">
               <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" icon="mdi-plus" density="compact" variant="text" class="mr-1" color="cyan-darken-4"
-                   v-if="item.isDir"/>
+                <tree-add-item :props="props" @addItem="addItem" v-if="item.is_dir && !item.is_share" :item="item"
+                               :parent-id="item.id"/>
               </template>
             </v-tooltip>
-            <v-btn icon="mdi-pencil" density="compact" variant="text" class="mr-1" color="success"></v-btn>
-            <v-btn icon="mdi-delete" density="compact" variant="text" color="purple-darken-4"></v-btn>
+            <v-tooltip text="Редактировать" location="top">
+              <template v-slot:activator="{ props }">
+                <tree-add-item :props="props" @addItem="addItem" icon="mdi-pencil" color="success" action="edit"
+                               :item="item"/>
+              </template>
+            </v-tooltip>
+            <delete-button :title="(item.is_dir)?'Удалить раздел?':'Удалить документ?'"
+                           :url="(item.is_dir)?'/admin/section/':'/admin/document/'"
+                           :id="item.id"
+                           @delete="deleteItem"
+                           color-button="purple-darken-4"
+                           density="compact"
+                           :message="(item.is_dir)?'Вы точно хотите удалить раздел? Все его подразделы и документы будут удалены.':'Вы точно хотите удалить документ?'"></delete-button>
+
           </div>
         </template>
       </v-list-item>
     </template>
-    <tree-item v-for="(child,key) in item.children" :key="key" :item="child"/>
+    <tree-item v-for="(child,key) in item.children" :key="key" :item="child" @add-item="addItem"
+               @delete-item="deleteItem"/>
   </v-list-group>
-  <!--    <div-->
-  <!--        :class="{bold: isFolder}"-->
-  <!--        @click="toggle"-->
-  <!--        @dblclick="makeFolder">-->
-  <!--      {{ item.name }}-->
-  <!--      <span v-if="isFolder">[{{ isOpen ? '-' : '+' }}]</span>-->
-  <!--    </div>-->
-  <!--    <ul v-show="isOpen" v-if="isFolder">-->
-  <!--      <tree-item-->
-  <!--          class="item"-->
-  <!--          v-for="(child, index) in item.children"-->
-  <!--          :key="index"-->
-  <!--          :item="child"-->
-  <!--          @make-folder="$emit('make-folder', $event)"-->
-  <!--          @add-item="$emit('add-item', $event)"-->
-  <!--      ></tree-item>-->
-  <!--      <li class="add" @click="$emit('add-item', item)">+</li>-->
-  <!--    </ul>-->
-
 </template>
 
 <script>
+import TreeAddItem from "@/components/JTreeView/TreeAddItem";
+import DeleteButton from "@/components/DeleteButton";
+
 export default {
   name: "TreeItem",
+  components: {
+    TreeAddItem,
+    DeleteButton
+  },
   props: {
     item: Object
   },
+  emits: ['addItem', 'deleteItem'],
   data: function () {
     return {
       isOpen: false
@@ -76,14 +91,15 @@ export default {
     }
   },
   methods: {
-    toggle: function () {
-      if (this.isFolder) {
-        this.isOpen = !this.isOpen;
-      }
+    addItem(item) {
+      this.$emit('addItem', item);
+    },
+    async deleteItem() {
+      this.$emit('deleteItem')
     },
     makeFolder: function () {
       if (!this.isFolder) {
-        this.$emit("make-folder", this.item);
+        //this.$emit("make-folder", this.item);
         this.isOpen = true;
       }
     }

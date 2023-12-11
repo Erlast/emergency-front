@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="pa-2">
     <h3 class="mb-2">{{ header }}</h3>
     <div>

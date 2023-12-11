@@ -23,21 +23,14 @@ const routes = [
                 }
             },
             {
-                path: '/mis-nso',
-                name: 'MisNso',
-                component: () => import('../pages/client/MisNso'),
+                path: '/page/:slug',
+                component: () => import('../pages/client/Page'),
+                name: 'Page',
                 meta: {
-                    title: 'МИС НСО'
+                    title: 'Документы'
                 }
             },
-            {
-                path: '/eln',
-                name: 'ELN',
-                component: () => import('../pages/client/ELN'),
-                meta: {
-                    title: 'ЕЛН'
-                }
-            },
+
             {
                 path: '/admin/news',
                 name: 'News',
@@ -93,9 +86,18 @@ const routes = [
                 }
             },
             {
-                path: '/admin/work-stations',
-                name: 'WorkStations',
-                component: () => import('../pages/admin/WorkStations/Index'),
+                path: '/admin/workplaces',
+                name: 'Workplaces',
+                component: () => import('../pages/admin/Workplaces/Index'),
+                meta: {
+                    title: 'ПК',
+                    authorize: [ADMIN_ROLE, USER_ROLE]
+                }
+            },
+            {
+                path: '/admin/workplace/:id?',
+                name: 'Workplace',
+                component: () => import('../pages/admin/Workplaces/Form'),
                 meta: {
                     title: 'ПК',
                     authorize: [ADMIN_ROLE, USER_ROLE]

@@ -9,7 +9,7 @@
                v-if="user().role===ADMIN_ROLE"></v-list-item>
   <v-list-item prepend-icon="mdi-file-document-multiple" :to="{name:'Documents'}" exact title="Документы"
                v-if="user().role===ADMIN_ROLE"></v-list-item>
-  <v-list-item prepend-icon="mdi-desktop-tower-monitor" :to="{name:'WorkStations'}" exact title="ПК"></v-list-item>
+  <v-list-item prepend-icon="mdi-desktop-tower-monitor" :to="{name:'Workplaces'}" exact title="ПК"></v-list-item>
 </template>
 
 <script>

@@ -14,56 +14,15 @@
                 <span class="mr-2">Основной раздел</span>
                 <v-tooltip text="Добавить раздел или документ" location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" icon="mdi-plus" density="compact" variant="text" class="mr-1"
-                           color="cyan-darken-4">
-                      <v-icon icon="mdi-plus"/>
-                      <v-dialog v-model="dialog" width="500" activator="parent">
-                        <v-card>
-                          <v-card-title class="text-h5">Добавление раздела или документа</v-card-title>
-
-                          <v-card-text>
-                            <div class="mb-2">
-                              <v-autocomplete
-                                  density="compact"
-                                  v-model="type"
-                                  item-value="id"
-                                  item-title="name"
-                                  label="Что добавляем"
-                                  :items="types"
-                              ></v-autocomplete>
-                            </div>
-                            <v-text-field
-                                density="compact"
-                                v-model="name"
-                                :label="(type===1)?'Наименование раздела':'Наименование документа'"
-                                required
-                            ></v-text-field>
-
-                            <v-text-field
-                                v-if="type===2"
-                                density="compact"
-                                v-model="url"
-                                label="Ссылка"
-                                required
-                            ></v-text-field>
-                          </v-card-text>
-
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn text @click="dialog = false">Отмена</v-btn>
-                            <v-btn color="red" text @click="makeFolder()">Добавить</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </v-btn>
+                    <tree-add-item :props="props" @addItem="addItem" :item="{}"/>
                   </template>
                 </v-tooltip>
               </div>
             </template>
           </v-list-item>
         </template>
-        <tree-item class="item" v-for="(child,key) in modelValue" :key="key" :item="child" @make-folder="makeFolder"
-                   @add-item="addItem"/>
+        <tree-item v-for="(child,key) in modelValue" :key="key" :item="child"
+                   @add-item="addItem" @delete-item="deleteItem"/>
       </v-list-group>
     </v-list>
   </v-card>
@@ -71,11 +30,12 @@
 
 <script>
 import TreeItem from "@/components/JTreeView/TreeItem";
-import {deepClone} from "@/utils";
+import TreeAddItem from "@/components/JTreeView/TreeAddItem";
 
 export default {
   name: "JTreeView",
   components: {
+    TreeAddItem,
     TreeItem
   },
   props: {
@@ -83,49 +43,16 @@ export default {
   },
   data() {
     return {
-      open: 'My Tree',
-      dialog: false,
-      name: null,
-      url: null,
-      type: 1,
-      types: [
-        {
-          id: 1,
-          name: 'Раздел',
-        },
-        {
-          id: 2,
-          name: 'Документ',
-        }
-      ]
+      open: ['root'],
     }
   },
   methods: {
-    makeFolder: function () {
-      const items = deepClone(this.modelValue)
-
-      items.push({
-        name: this.name,
-        url: this.url,
-        isDir: (this.type === 1),
-        id: this.name + Math.random()
-      })
-      this.name = null
-      this.dialog = false
-      this.type = 1
-      this.url = null
-      this.$emit('update:modelValue', items)
-      //  item.children = [];
-      //this.addItem(item);
-    },
     addItem: function (item) {
-      item.children.push({
-        name: this.name,
-        isDir: true,
-        id: this.name + Math.random()
-      });
-      this.$emit('update', this.items)
-    }
+      this.$emit('addItem', item)
+    },
+    deleteItem() {
+      this.$emit('deleteItem')
+    },
   }
 }
 </script>

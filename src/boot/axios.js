@@ -118,6 +118,15 @@ api.interceptors.response.use(
 
         let message = 'Unknown error'
 
+        if (error.code === 'ERR_NETWORK') {
+
+            notify({
+                title: error.message,
+                type: 'danger',
+            })
+            return Promise.reject(error)
+        }
+
         if (error.response.data.message)
             message = error.response.data.message
 

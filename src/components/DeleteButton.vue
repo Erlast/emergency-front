@@ -1,9 +1,9 @@
 <template>
-  <v-btn variant="text" :color="colorButton" icon="mdi-delete">
+  <v-btn variant="text" :color="colorButton" icon="mdi-delete" :density="density">
     <v-icon icon="mdi-delete"/>
     <v-dialog v-model="dialog" width="500" activator="parent">
       <v-card>
-        <v-card-title class="text-h5">Удалить новость?</v-card-title>
+        <v-card-title class="text-h5">{{ title }}</v-card-title>
 
         <v-card-text>{{ message }}</v-card-text>
 
@@ -25,6 +25,12 @@ export default {
       type: Number,
       required: true
     },
+    title: {
+      type: String,
+      default() {
+        return 'Удалить новость?'
+      }
+    },
     url: {
       type: String,
       default() {
@@ -41,6 +47,12 @@ export default {
       type: String,
       default() {
         return "Вы действительно хотите удалить новость?";
+      }
+    },
+    density: {
+      type: String,
+      default() {
+        return 'default'
       }
     }
   },

@@ -10,6 +10,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^40.1.0",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "@cloudgeek/vue3-video-player": "^0.3.10",
     "@kyvg/vue3-notification": "^3.0.2",
     "@marcoschulte/vue3-progress": "^0.0.7",
     "@mdi/font": "^7.3.67",
@@ -19,9 +20,11 @@
     "core-js": "^3.8.3",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
+    "maska": "^2.1.10",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.0",
     "qs": "^6.11.2",
+    "v-mask": "^2.3.0",
     "vue": "^3.2.13",
     "vue-router": "^4.2.5",
     "vuetify": "^3.4.2"
