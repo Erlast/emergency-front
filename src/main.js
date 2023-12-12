@@ -18,9 +18,7 @@ import Vue3VideoPlayer from '@cloudgeek/vue3-video-player'
 import '@cloudgeek/vue3-video-player/dist/vue3-video-player.css'
 import ru from '@/lang/ru'
 import {vMaska} from 'maska'
-
 import CKEditor from "@ckeditor/ckeditor5-vue";
-//import {VueMaskDirective} from "v-mask";
 
 const vuetify = createVuetify({
     components,
@@ -31,6 +29,7 @@ const vuetify = createVuetify({
 })
 
 const pinia = createPinia()
+
 pinia.use(piniaPluginPersistedstate)
 
 const app = createApp(App)
@@ -44,8 +43,8 @@ app.use(Vue3ProgressPlugin)
 app.use(Vue3VideoPlayer, {
     lang: ru
 })
-//app.directive("mask", VueMaskDirective)
 app.directive("maska", vMaska)
+
 app.config.globalProperties.$axios = api
 app.config.globalProperties.$moment = moment
 

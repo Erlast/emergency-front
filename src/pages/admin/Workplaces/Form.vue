@@ -286,12 +286,34 @@ export default {
     async onAddOperatingSystem() {
       await this.getOperatingSystems()
     },
+    async getWorkplace() {
+      if (this.$route.params.id) {
+        const {data} = await this.$axios.get(`/admin/workplace/${this.$route.params.id}`)
+
+        this.name = data.data.name
+        this.ip_id = data.data.ip_id
+        this.department_id = data.data.department_id
+        this.person_id = data.data.person_id
+        this.mac_address = data.data.mac_address
+        this.inventory_number = data.data.inventory_number
+        this.serial_number = data.data.serial_number
+        this.level = data.data.level
+        this.room = data.data.room
+        this.office = data.data.office
+        this.operating_system_id = data.data.operating_system_id
+        this.os_serial_number = data.data.os_serial_number
+        this.programming_office = data.data.programming_office
+        this.po_serial_number = data.data.po_serial_number
+
+      }
+    }
   },
   async mounted() {
     await this.getFreeIps()
     await this.getDepartments()
     await this.getPersons()
     await this.getOperatingSystems()
+    await this.getWorkplace()
   }
 }
 </script>

@@ -12,7 +12,9 @@
         item-value="id"
         @update:options="getNews"
         loading-text="Загрузка... подождите"
-        :items="news">
+        :items="news"
+        items-per-page-text="На странице"
+    >
       <template #[`item.created_at`]="{ item }">
         {{ $moment(item.created_at).format("DD.MM.YYYY HH:mm:ss") }}
       </template>
