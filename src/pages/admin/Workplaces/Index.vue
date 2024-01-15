@@ -1,6 +1,7 @@
 <template>
-  <v-row class="mb-2 pa-3 justify-end">
+  <v-row class="mb-2 pa-3 justify-end" v-if="user().role===ADMIN_ROLE">
     <v-btn color="success" class="mb-2" :to="{name:'Workplace'}">Добавить</v-btn>
+    <v-btn color="amber-darken-1" class="mb-2 ml-2" :to="{name:'FreeIP'}">Свободные IP</v-btn>
     <v-divider></v-divider>
   </v-row>
   <v-row class="mt-2 px-3">
@@ -16,7 +17,7 @@
         :items="workplaces"
         items-per-page-text="На странице"
     >
-      <template #[`item.buttons`]="{ item }">
+      <template #[`item.buttons`]="{ item }" v-if="user().role===ADMIN_ROLE">
         <v-btn variant="text" color="success" icon="mdi-pencil"
                :to="{name:'Workplace',params:{id:item.id}}"></v-btn>
         <delete-button :id="item.id" @delete="deleteWorkplace" message="Вы действительно хотите удалить ПК?"
@@ -96,6 +97,7 @@
 
 <script>
 import DeleteButton from "@/components/DeleteButton";
+import {user, ADMIN_ROLE} from "@/utils/auth";
 
 export default {
   name: "WorkplacesIndex",
@@ -104,6 +106,8 @@ export default {
   },
   data() {
     return {
+      user,
+      ADMIN_ROLE,
       programming_offices: [
         {
           value: 1,

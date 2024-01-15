@@ -104,6 +104,15 @@ const routes = [
                 }
             },
             {
+                path: '/admin/workplaces/free-ip',
+                name: 'FreeIP',
+                component: () => import('../pages/admin/Workplaces/IPList'),
+                meta: {
+                    title: 'Свободные IP',
+                    authorize: [ADMIN_ROLE]
+                }
+            },
+            {
                 path: '/admin/documents',
                 name: 'Documents',
                 component: () => import('../pages/admin/Documents/Index'),
