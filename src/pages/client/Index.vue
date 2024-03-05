@@ -40,7 +40,7 @@
 <script>
 import {isGuest, user, ADMIN_ROLE} from "@/utils/auth";
 import {ref} from 'vue'
-import DeleteButton from "@/components/DeleteButton";
+import DeleteButton from "@/components/DeleteComponent/Index";
 
 export default {
   name: "IndexPage",

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import DeleteButton from "@/components/DeleteButton";
+import DeleteButton from "@/components/DeleteComponent/Index";
 
 export default {
   name: "UsersIndex",

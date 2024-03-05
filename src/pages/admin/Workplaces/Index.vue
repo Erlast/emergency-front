@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import DeleteButton from "@/components/DeleteButton";
+import DeleteButton from "@/components/DeleteComponent/Index";
 import {user, ADMIN_ROLE} from "@/utils/auth";
 
 export default {

@@ -3,7 +3,7 @@
                :title="item.name"
                @dblclick="makeFolder">
     <template v-slot:title>
-      <div class="d-flex flex-row align-center">
+      <div class="d-flex flex-row align-center" @contextmenu="onContextMenu($event)">
         <span class="mr-2">{{ item.name }}</span>
         <v-tooltip text="Добавить" location="top">
           <template v-slot:activator="{ props }">
@@ -68,13 +68,17 @@
 
 <script>
 import TreeAddItem from "@/components/JTreeView/TreeAddItem";
-import DeleteButton from "@/components/DeleteButton";
+import DeleteButton from "@/components/DeleteComponent/Index";
+import ContextMenu from '@imengyu/vue3-context-menu'
+import {h} from 'vue'
+//import DeleteDialogComponent from '@/components/DeleteComponent/Dialog'
+import TestComp from '@/components/DeleteComponent/TestComp'
 
 export default {
   name: "TreeItem",
   components: {
     TreeAddItem,
-    DeleteButton
+    DeleteButton,
   },
   props: {
     item: Object
@@ -94,14 +98,50 @@ export default {
     addItem(item) {
       this.$emit('addItem', item);
     },
-    async deleteItem() {
-      this.$emit('deleteItem')
+    async deleteItem(id) {
+      this.$emit('deleteItem', id)
     },
     makeFolder: function () {
       if (!this.isFolder) {
         //this.$emit("make-folder", this.item);
         this.isOpen = true;
       }
+    },
+    onContextMenu(e) {
+      //prevent the browser's default menu
+      e.preventDefault();
+      //show your menu
+      ContextMenu.showContextMenu({
+            x: e.x,
+            y: e.y,
+            items: [
+              {
+                label: "Добавить",
+                icon: 'mdi-plus mdi',
+                onClick: () => {
+                  console.log("You click a menu item");
+                }
+              },
+              {
+                label: "Редактировать",
+                icon: 'mdi mdi-pencil',
+                divided: true,
+                onClick: () => {
+                  console.log('here')
+                }
+              },
+              {
+                label: "Удалить",
+                name: 'delete',
+                icon: 'mdi mdi-delete',
+                customRender: (item) => {
+                  console.log(item)
+                  return h(TestComp,{show:false})
+                }
+              }
+            ]
+          },
+      );
     }
   }
 

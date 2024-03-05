@@ -19,6 +19,9 @@ import '@cloudgeek/vue3-video-player/dist/vue3-video-player.css'
 import ru from '@/lang/ru'
 import {vMaska} from 'maska'
 import CKEditor from "@ckeditor/ckeditor5-vue";
+import '@imengyu/vue3-context-menu/lib/vue3-context-menu.css'
+import ContextMenu from '@imengyu/vue3-context-menu'
+//import DeleteDialogComponent from "@/components/DeleteComponent/Dialog";
 
 const vuetify = createVuetify({
     components,
@@ -43,9 +46,13 @@ app.use(Vue3ProgressPlugin)
 app.use(Vue3VideoPlayer, {
     lang: ru
 })
+app.use(ContextMenu)
+//app.component('DeleteDialogComponent',DeleteDialogComponent)
+
 app.directive("maska", vMaska)
 
 app.config.globalProperties.$axios = api
 app.config.globalProperties.$moment = moment
+//app.config.compilerOptions.isCustomElement = tag => tag.startsWith('v-')
 
 app.mount('#app')
