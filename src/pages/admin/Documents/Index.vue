@@ -11,9 +11,6 @@ export default {
   components: {JTreeView},
   data() {
     return {
-      config: {
-        roots: ["id1", "id2"],
-      },
       items: []
     }
   },
@@ -39,7 +36,10 @@ export default {
         formData.append('file', file);
         formData.append('name', item.name)
         formData.append('p_id', item.p_id)
-        formData.append('id', item.id)
+
+        if (item.id)
+          formData.append('id', item.id)
+
         await this.$axios.post('/admin/document', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'

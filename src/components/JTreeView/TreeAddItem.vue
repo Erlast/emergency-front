@@ -160,7 +160,7 @@ export default {
     async addItem() {
 
       const result = await this.v$.$validate()
-      console.log(this.item)
+
       if (result) {
         const item = {
           id: this.id,
